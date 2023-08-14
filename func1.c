@@ -48,7 +48,7 @@ char *find_path(char **env)
 	int i;
 	char *buffer;
 
-	for (i = 0; buffer != NULL; i++)
+	for (i = 0; env[i] != NULL; i++)
 	{
 		buffer = strtok(env[i], "=");
 		if (_strcmp(buffer, "PATH") == 0)
