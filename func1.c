@@ -11,25 +11,26 @@ int _strlen(const char *s)
 void err_handle(int *n, char *str)
 {
 	write(1, str, *n);
-	perror(": Error ");
+	write(1, ": ", 2);
+	perror("");
 }
 
-char **get_arg(char *src, char **arr, int *count)
+char **get_arg(char *src, char **arr)
 {
-	int i;
+	int i, count;
 	char *buffer;
 
-	for (i = 0, *count = 0; src[i] != '\0'; i++)
+	for (i = 0, count = 0; src[i] != '\0'; i++)
 		if (src[i] == ' ' || src[i] == '\n')
-			(*count)++;
-	arr = malloc(sizeof(char *) * (*count + 1));
+			count++;
+	arr = malloc(sizeof(char *) * (count + 1));
 	buffer = strtok(src, " \n");
 	for (i = 0; buffer != NULL; i++)
 	{
 		arr[i] = buffer;
 		buffer = strtok(NULL, " \n");
 	}
-	arr[*count] = NULL;
+	arr[count] = NULL;
 	return (arr);
 }
 
@@ -43,7 +44,7 @@ int _strcmp(char *a, char *b)
 	return (a[i] - b[i]);
 }
 
-char *find_path(char **env)
+char *get_var(char **env, char *var)
 {
 	int i;
 	char *buffer;
@@ -51,13 +52,13 @@ char *find_path(char **env)
 	for (i = 0; env[i] != NULL; i++)
 	{
 		buffer = strtok(env[i], "=");
-		if (_strcmp(buffer, "PATH") == 0)
+		if (_strcmp(buffer, var) == 0)
 		{
 			buffer = strtok(NULL, "=");
-			printf("%s\n", buffer);
 			return (buffer);
 		}
 	}
+	return (NULL);
 }
 
 

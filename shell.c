@@ -3,25 +3,23 @@
 
 int main(int ac, char **av, char **env)
 {
-	int i, prog_len, status, argc = 0;
-	char n = '\n';
-	char **arg, *buffer = NULL;
+	int prog_len, status;
+	char *path, *cmd, n = '\n';
+	char **arg, **tmp, *buffer = NULL;
 	size_t buf_len = 0;
 	pid_t child;
-	const char *prompt;
 
 	prog_len = _strlen(av[0]);
 	(void) ac;
 	while (1)
-	{
+	{ 
 		if (isatty(0) == 1)
 		{
-			prompt = "sam$ ";
-			write(1, prompt, PT_LEN);
+			status = write(1, "sam$ ", PT_LEN);
 			if (status == -1)
 			{
 				err_handle(&prog_len, av[0]);
-				break;
+				exit(98);
 			}
 		}
 		status = getline(&buffer, &buf_len, stdin);
@@ -30,12 +28,27 @@ int main(int ac, char **av, char **env)
 			write(1, &n, 1);
 			break;
 		}
-		arg = get_arg(buffer, arg, &argc);
+		arg = get_arg(buffer, arg);
+		/* Path handling stats here, commented out the lines
+		 * some bugs need handling 
+		tmp = clone_arr(env);
+		path = get_var(tmp, "PATH");
+		free(tmp);
+		tmp = split_path(path);
+		cmd = get_cmd(tmp, arg[0]);
+		if (cmd == NULL)
+		{
+			err_handle(&prog_len, av[0]);
+			continue;
+		}
+		*/
 		child = fork();
 		if (child == -1)
 		{
 			err_handle(&prog_len, av[0]);
-			break;
+			free(arg);
+			free(buffer);
+			exit(98);
 		}
 
 		if (child == 0)
@@ -44,16 +57,15 @@ int main(int ac, char **av, char **env)
 			if (status == -1)
 			{
 				err_handle(&prog_len, av[0]);
+				free(arg);
 				break;
 			}
 		}
-
 		waitpid(child, NULL, 0);
 		free(arg);
 		if (isatty(0) != 1)
 			break;
 	}
-	/* leaks still possible, optimise memory */
 	free(buffer);
 	return (0);
 }
