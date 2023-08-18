@@ -1,3 +1,6 @@
+#id_precode
+This branch contains the work done by Ekop Samuel Idorenyin (@rzsamrio) to the development of the project
+
 # Simple Shell - Collaborative Remake of the shell
 Welcome to the Simple Shell project, the shell is a huge program that took years of coding and improving to reach its current level. This is why the project is called "Simple Shell" in addition to have a 15 day period to code it as part of our ALX SE course project 0x16. C - Simple Shell
 
@@ -12,8 +15,4 @@ A shell is a command-line interface program that acts as an intermediary between
 
 4. **Pipeline Support:** Shells often allow you to chain together multiple commands using pipes (|) to pass the output of one command as the input to another.
 
-5. **Variable Management:** Shells typically support the use of environment variables to store information that can be accessed by both the shell and the programs it runs.
-
-**And much more**
-
-We will try to implement our own version of the Shell and tackle as many features as possible.
+5. **Variable Management:** Shells typically support the use of environment variables to store information that can be accessed by both the shell and the programs it runs..

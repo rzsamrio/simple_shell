@@ -46,8 +46,8 @@ int _strcmp(char *a, char *b)
 
 char *get_var(char **env, char *var)
 {
-	int i;
-	char *buffer;
+	int i, size, j;
+	char *buffer, *tmp;
 
 	for (i = 0; env[i] != NULL; i++)
 	{
@@ -55,10 +55,13 @@ char *get_var(char **env, char *var)
 		if (_strcmp(buffer, var) == 0)
 		{
 			buffer = strtok(NULL, "=");
-			return (buffer);
+			size = _strlen(buffer);
+			tmp = malloc(size + 1);
+			tmp = _strcpy(tmp, buffer);
+			free_array(env);
+			return (tmp);
 		}
 	}
 	return (NULL);
 }
-
 

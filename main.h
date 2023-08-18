@@ -8,7 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define PT_LEN 5 /* Prompt size */
+#define PT_LEN 4 /* Prompt size */
 
 extern char **environ;
 
@@ -21,6 +21,9 @@ char **split_path(char *path);
 char *_strcat(char *str1, char *str2);
 char *get_cmd(char **path_array, char *cmd);
 char **clone_arr(char **array);
+int ispath(char *cmd);
+char *_strcpy(char *dest, char *src);
+void free_array(char **arr);
 
 
 #endif
