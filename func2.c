@@ -1,29 +1,20 @@
-/**		TO-DO
- * Fix memory leaks in your code
- * Write function: split_path()
- 	* truncates our path variable gotten from get_path()
-	* uses strtok(buffer, ":") to split them
-	* store each one as elements of an array
- * Write function: find_path()
- 	* concatenates our first argument with each PATH
- 	* finds the location of our command function in PATH
-	* returns a buffer containing the location
- * We then pass this buffer to our execve command
- * Done: get_path()
- 	* Finds the PATH variable in our environment array and executes
- */
 #include "main.h"
 
 
 char **clone_arr(char **array)
 {
-	int i;
+	int i, j, size;
 	char **clone;
 
 	for (i = 0; array[i] != NULL; i++);
 	clone = malloc(sizeof(char *) * (i + 1));
 	for (i = 0; array[i] != NULL; i++)
-		clone[i] = array[i];
+	{
+		size = _strlen(array[i]);
+		clone[i] = malloc(size + 1);
+		clone[i] = _strcpy(clone[i], array[i]);
+	}
+	clone[i] = NULL;
 	return (clone);
 }
 
@@ -58,10 +49,12 @@ char *get_cmd(char **path_array, char *cmd)
 		status = stat(tmp, &file);
 		if (status == 0)
 		{
-			return(tmp);
+			free(path_array);
+			return (tmp);
 		}
 		free(tmp);
 	}
+	free(path_array);
 	return (NULL);
 }
 
