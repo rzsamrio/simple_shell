@@ -16,27 +16,6 @@ int _strlen(char *s)
 	return (i);
 }
 
-char *_strcat(char *s1, char *s2)
-{
-	char *str;
-	int i, j;
-
-	str = malloc(_strlen(s1) + _strlen(s2) + 2);
-
-	for (i = 0; s1[i]; i++)
-		str[i] = s1[i];
-
-	str[i] = '/';
-	i++;
-
-	for (j = 0; s2[j]; i++, j++)
-		str[i] = s2[j];
-
-	str[i] = '\0';
-
-	return (str);
-}
-
 /**
  * _strncmp - compares the first n bytes/characters of s1 and s2
  * @s1: pointer to the 1st string
@@ -85,13 +64,52 @@ char *_strcpy(char *dest, const char *src)
 	return (dest);
 }
 
-int _strcmp(char *a, char *b)
+/**
+ * _puts - output strings to STDOUT/STDERR
+ * @s: the string to print
+ * @fd: file descriptor value
+ * --> 1 is for STDOUT
+ * --> 2 is for STDERR
+ *
+ * Return: length of the string
+*/
+int _puts(char *s, unsigned int fd)
 {
-        int i;
+	int i = 0;
 
-        for (i = 0; a[i] == b[i]; i++)
-                if (a[i] == 0)
-                        return (0);
-        return (a[i] - b[i]);
+	if (fd != 1 && fd != 2)
+		fd = 1;
+
+
+	while (s[i])
+		write(fd, &s[i++], 1);
+
+	return (i + 1);
 }
 
+/**
+ * err_handle - outputs error message with program name
+ * and frees memory
+ * @prog: program name
+ * @a: string array to be freed
+ * @b: string array to be freed
+ * @c: string to be freed
+ *
+ * Return: void
+*/
+void err_handle(char *prog, char **a, char **b, char *c)
+{
+	if (a)
+		free(a);
+	if (b)
+		free(b);
+	if (c)
+		free(c);
+
+	if (prog)
+	{
+		_puts(prog, 2);
+		_puts(": ", 2);
+		perror("");
+	}
+}
