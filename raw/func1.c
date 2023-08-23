@@ -8,7 +8,7 @@ int _strlen(const char *s)
 	return (i);
 }
 
-void err_handle(int *n, char *str)
+void err_handle(const int *n, char *str)
 {
 	write(1, str, *n);
 	write(1, ": ", 2);
