@@ -102,7 +102,7 @@ int runc(char *cmd, char **env)
 {
 	int i;
 
-	if (_strcmp(cmd, "env/") == 0)
+	if (_strcmp(cmd, "env") == 0)
 	{
 		for (i = 0; env[i]; i++)
 		{
