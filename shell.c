@@ -3,7 +3,7 @@
 
 int main(int ac, char **av, char **env)
 {
-	int i, prog_len, status, exestat;
+	int prog_len, status, exestat;
 	char *path, *cmd, n = '\n';
 	char **arg, **tmp, *buffer = NULL;
 	size_t buf_len = 0;

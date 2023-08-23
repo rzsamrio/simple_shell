@@ -46,7 +46,7 @@ int _strcmp(char *a, char *b)
 
 char *get_var(char **env, char *var)
 {
-	int i, size, j;
+	int i, size;
 	char *buffer, *tmp;
 
 	for (i = 0; env[i] != NULL; i++)

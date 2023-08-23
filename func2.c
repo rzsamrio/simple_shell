@@ -3,7 +3,7 @@
 
 char **clone_arr(char **array)
 {
-	int i, j, size;
+	int i, size;
 	char **clone;
 
 	for (i = 0; array[i] != NULL; i++);
