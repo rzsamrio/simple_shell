@@ -20,26 +20,19 @@ int main(int ac __attribute__((unused)), char **av)
 			write(1, &prompt, _strlen(prompt));
 
 		fflush(stdout);
-
-		check = getline(&line, &len, stdin);
-		if (check == -1 || line[0] == '\n')
+		if (getline(&line, &len, stdin) == -1)
 		{
-			if (check == -1)
-			{
-				_puts("\n", 1);
-				free(line);
-				exit(98);
-			}
-			continue;
+			_puts("\n", 1);
+			free(line);
+			exit(98);
 		}
 		else
 		{
-			if (line[_strlen(line) - 1] == '\n')
-				line[_strlen(line) - 1] = '\0';
-
 			check = fcall(line, av[0]);
 			if (check == -1)
 				exit(98);
+			else if (check == 2 || check == 1)
+				continue;
 		}
 
 		if  (isatty(0) != 1)
