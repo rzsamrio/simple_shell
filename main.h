@@ -18,6 +18,7 @@ int specify(char *cmd, char **env);
 char **get_arg(char *src, char **arr);
 int p_handl(char **cmd, char **env, char *prog, char **exe);
 int execute(char *cmd, char **env, char *prog, char **exe, char *buffer);
+char *exe_read(char *prog, int *len);
 
 /* path functions --> path.c */
 char *fpath(char *env[]);
@@ -41,4 +42,6 @@ int _puts(char *s, unsigned int fd);
 char **clone_arr(char **array);
 char *get_var(char **env, char *var);
 
+
+char **split_exe(char *s);
 #endif

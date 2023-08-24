@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * main - simple shell
@@ -8,24 +9,24 @@
  */
 int main(int ac __attribute__((unused)), char **av)
 {
-	char *cmd, **arg, *buffer = NULL;
-	const char n = '\n';
-	size_t buf_len = 0;
+	char *cmd, **arg, *buffer;
+	int rc;
 	const int t_stat = isatty(0);
 
 	while (1)
 	{
 		prompt(av[0]);
-		if (getline(&buffer, &buf_len, stdin) == -1)
-		{
-			write(1, &n, 1);
+		buffer = exe_read(av[0], &rc);
+		if (rc == 0)
 			break;
-		}
-		if (buffer[0] == '\n')
+		else if (rc == 1)
 			continue;
 		arg = get_arg(buffer, arg);
 		if (specify(arg[0], environ) == 1)
+		{
+			free(buffer);
 			continue;
+		}
 
 		if (ispath(arg[0]) == 0)
 		{
@@ -33,6 +34,7 @@ int main(int ac __attribute__((unused)), char **av)
 			{
 				if (t_stat == 0)
 					break;
+				free(buffer);
 				continue;
 			}
 		}
@@ -40,11 +42,9 @@ int main(int ac __attribute__((unused)), char **av)
 			cmd = arg[0];
 
 		execute(cmd, environ, av[0], arg, buffer);
-		if (ispath(arg[0]) == 0)
-			free(cmd);
-		free(arg);
 		if (t_stat == 0)
 			break;
+		free(buffer);
 	}
 	free(buffer);
 	return (0);

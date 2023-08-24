@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
  * prompt - displays a prompt
@@ -7,7 +6,7 @@
  */
 void prompt(char *p_name)
 {
-	int status, t_stat;
+	int t_stat, status;
 
 	t_stat = isatty(0);
 	if (t_stat == 1)
@@ -138,5 +137,8 @@ int execute(char *cmd, char **env, char *prog, char **exe, char *buffer)
 	}
 	else
 		waitpid(child, NULL, 0);
+	if (ispath(exe[0]) == 0)
+		free(cmd);
+	free(exe);
 	return (0);
 }
