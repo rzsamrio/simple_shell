@@ -11,64 +11,54 @@
 */
 int fcall(char *line, char *prog)
 {
-	pid_t pid; int st = 1; 
-	char **args, **tmp, *cmd;
+	pid_t pid;
+	int check, st = 0;
+	char **args = NULL, **tmp = NULL, *cmd = NULL, *clone = NULL;
 
-	if (line[0] == '\n')
-		return (1);
-
-	args = tokenize(line);
-	if (runc(args[0], environ) == 1)
-		return (1);
+	clone = malloc(sizeof(char) * (_strlen(line) + 1));
+	_strcpy(clone, line);
+	args = tokenize(clone);
 	cmd = args[0];
-
 	if (ispath(cmd) == 0)
 	{
-		st = 0;
 		tmp = spath(environ);
 		cmd = fetchc(tmp, cmd);
+		st++;
 		if (!cmd)
 		{
-			err_handle(prog);
-			free(args);
+			err_handle(prog, args, tmp, clone);
 			return (2);
 		}
 	}
-
-	if ((pid = fork()) == -1)
+	
+	pid = fork();
+	if (pid == -1)
 	{
-		err_handle(prog);
-		free(args);
-		free(line);
+		err_handle(prog, args, tmp, clone);
 		return (-1);
 	}
-
 	if (pid == 0)
 	{
-		if (execve(cmd, args, environ) == -1)
+		check = execve(cmd, args, environ);
+		if (check == -1)
 		{
-			err_handle(prog);
-			free(args);
-			free(line);
+			err_handle(prog, args, tmp, clone);
 			_exit(0);
 		}
 	}
 	else
 		waitpid(pid, NULL, 0);
+	err_handle(NULL, args, tmp, clone);
 
-	free(args);
-	if (st == 0)
-		free(cmd);
-
-	return (0);
+	return (st == 1 ? (free(cmd), 0) : 0);
 }
 
-	/**
-	 * tokenize - turns a line input into an array of strings/arguments
-	 * @line: the user's input line
-	 *
-	 * Return: array of strings/arguments
-	*/
+/**
+ * tokenize - turns a line input into an array of strings/arguments
+ * @line: the user's input line
+ *
+ * Return: array of strings/arguments
+*/
 char **tokenize(char *line)
 {
 	char **args = NULL, *token;
@@ -80,7 +70,8 @@ char **tokenize(char *line)
 
 	token = strtok(line, " \n");
 	args = malloc((argc + 1) * sizeof(char *));
-	if (!args) return (NULL);
+	if (!args)
+		return (NULL);
 
 	for (i = 0; token; i++)
 	{
@@ -92,28 +83,3 @@ char **tokenize(char *line)
 	return (args);
 }
 
-/**
- * runc - runs builtin commands
- * @cmd: command string to check
- * env: the environmeent string
- * Return: 0 if not builtin, 1 if builtin, exit on exit
- */
-int runc(char *cmd, char **env)
-{
-	int i;
-
-	if (_strcmp(cmd, "env") == 0)
-	{
-		for (i = 0; env[i]; i++)
-		{
-			write(1, env[i], _strlen(env[i]));
-			_puts("\n", 1);
-		}
-		return (1);
-	}
-	else if (_strcmp(cmd, "exit") == 0)
-		exit(0);
-	
-	return (0);
-}
-	

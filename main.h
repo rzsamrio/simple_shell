@@ -16,26 +16,22 @@ extern char **environ;
 
 /* Function Declarations */
 
-    /* String --> file: f1.c */
+    /* String/Error Handling           --> file: f1.c */
 int _strlen(char *s);
-char *_strcat(char *s1, char *s2);
 char *_strcpy(char *dest, const char *src);
 int _strncmp(const char *s1, const char *s2, int n);
-int _strcmp(char *a, char *b);
-
-	/* Erros --> file: f4.c */
 int _puts(char *s, unsigned int fd);
-void err_handle(char *prog);
+void err_handle(char *prog, char **a, char **b, char *c);
 
-    /* Process Handling      --> file: f2.c */
+    /* Process Handling / tokenization --> file: f2.c */
 int fcall(char *line, char *prog);
 char **tokenize(char *line);
-int runc(char *cmd, char **env);
 
-    /* PATH handling         --> file: f3.c */
+    /* PATH handling                   --> file: f3.c */
 int ispath(char *cmd);
 char *fpath(char **env);
 char **spath(char **env);
 char *fetchc(char **path, char *cmd);
+char *_strcat(char *s1, char *s2);
 
 #endif /* #ifndef HEADER_H */
