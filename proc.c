@@ -1,8 +1,8 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * prompt - displays a prompt
- * @t_stat: terminal status
  * @p_name: program name to print on error
  */
 void prompt(char *p_name)
@@ -72,14 +72,14 @@ char **get_arg(char *src, char **arr)
 }
 
 /**
- * path_handl - handles PATH
+ * p_handl - handles PATH
  * @cmd: address of the cmd to be passed to execve
  * @env: environment variable
  * @prog: name of program
  * @exe: execution line
  * Return: 0 on completion and 1 on failure
  */
-int p_handl(char **cmd, char **env, char *prog, char **exe, char *buffer)
+int p_handl(char **cmd, char **env, char *prog, char **exe)
 {
 	char *path, **tmp;
 
@@ -88,8 +88,7 @@ int p_handl(char **cmd, char **env, char *prog, char **exe, char *buffer)
 	{
 		err_handle(prog);
 		free(exe);
-		free(buffer);
-		exit(98);
+		return (1);
 	}
 	tmp = split_path(path);
 	*cmd = get_cmd(tmp, exe[0]);
@@ -108,10 +107,11 @@ int p_handl(char **cmd, char **env, char *prog, char **exe, char *buffer)
  * @env: environment variable
  * @prog: name of program
  * @exe: execution line
- * Return: 0 on completion and 1 on failure
+ * @buffer: string holding getline content
+ * Return: 0 on completion and exits on failure
  */
- 
- int execute(char *cmd, char **env, char *prog, char **exe, char *buffer)
+
+int execute(char *cmd, char **env, char *prog, char **exe, char *buffer)
 {
 	int p_stat;
 	pid_t child;
@@ -132,8 +132,9 @@ int p_handl(char **cmd, char **env, char *prog, char **exe, char *buffer)
 		if (execve(cmd, exe, env) == -1)
 		{
 			err_handle(prog);
-			exit(0);
+			_exit(1);
 		}
+		_exit(0);
 	}
 	else
 		waitpid(child, NULL, 0);

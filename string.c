@@ -1,12 +1,28 @@
 #include "main.h"
 
+/**
+ * _strlen - finds the length of a string
+ * @s: string
+ *
+ * Return: length
+ */
 int _strlen(const char *s)
 {
 	int i;
 
-	for (i = 0; s[i] != 0; i++);
+	i = 0;
+	while (s[i] != 0)
+		i++;
 	return (i);
 }
+
+/**
+ * _strcmp - compares 2 strings
+ * @a: string 1
+ * @b: string 2
+ *
+ * Return: 0 if similar, difference if not
+ */
 int _strcmp(char *a, char *b)
 {
 	int i;
@@ -44,7 +60,13 @@ int _strncmp(const char *s1, const char *s2, int n)
 	return ((n == 0) ? 0 : (s1[i] - s2[i]));
 }
 
-
+/**
+ * _strcpy - copies 2 strings
+ * @dest: destination strings'
+ * @src: source string
+ *
+ * Return: address of dest
+ */
 char *_strcpy(char *dest, char *src)
 {
 	int i;
@@ -57,14 +79,21 @@ char *_strcpy(char *dest, char *src)
 	return (dest);
 }
 
+/**
+ * _strcat - dynamically concatenates with path /
+ * @str1: path string
+ * @str2: executable name
+ *
+ * Return: PATH of execution
+ */
 char *_strcat(char *str1, char *str2)
 {
 	char *merge;
 	int i, j, len;
-	
+
 	len = _strlen(str1) + _strlen(str2);
 	merge = malloc(len + 2);
-	
+
 	for (i = 0; str1[i] != '\0'; i++)
 		merge[i] = str1[i];
 	merge[i] = '/';

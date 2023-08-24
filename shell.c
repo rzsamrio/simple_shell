@@ -11,6 +11,7 @@ int main(int ac __attribute__((unused)), char **av)
 	char *cmd, **arg, *buffer = NULL;
 	const char n = '\n';
 	size_t buf_len = 0;
+	const int t_stat = isatty(0);
 
 	while (1)
 	{
@@ -28,22 +29,22 @@ int main(int ac __attribute__((unused)), char **av)
 
 		if (ispath(arg[0]) == 0)
 		{
-			if (p_handl(&cmd, environ, av[0], arg, buffer) == 1)
+			if (p_handl(&cmd, environ, av[0], arg) == 1)
 			{
-				if (isatty(0) == 0)
+				if (t_stat == 0)
 					break;
 				continue;
 			}
 		}
 		else
 			cmd = arg[0];
-		
-		if (execute(cmd, environ, av[0], arg, buffer) == 1)
-			continue;
+
+		execute(cmd, environ, av[0], arg, buffer);
 		if (ispath(arg[0]) == 0)
 			free(cmd);
-		/*	free(path); */
 		free(arg);
+		if (t_stat == 0)
+			break;
 	}
 	free(buffer);
 	return (0);

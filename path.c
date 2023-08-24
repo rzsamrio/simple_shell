@@ -10,7 +10,9 @@ char **clone_arr(char **array)
 	int i, size;
 	char **clone;
 
-	for (i = 0; array[i] != NULL; i++);
+	i = 0;
+	while (array[i])
+		i++;
 	clone = malloc(sizeof(char *) * (i + 1));
 	for (i = 0; array[i] != NULL; i++)
 	{
@@ -24,11 +26,10 @@ char **clone_arr(char **array)
 
 /**
  * get_var - finds and returns the Requested variable
- * @var: requested variable to serch for
+ * @var: requested variable to search for
  * @env: sacrificial environment string
- *
+ * Return: variable value or NULL if not found
  */
-
 char *get_var(char **env, char *var)
 {
 	int i, size;
@@ -51,7 +52,7 @@ char *get_var(char **env, char *var)
 }
 
 /**
- * fpath: Finds the PATH value in the environment
+ * fpath - Finds the PATH value in the environment
  * @env: environment variable
  * Return: PATH or NULL if not found
  */
@@ -91,7 +92,7 @@ char **split_path(char *path)
 	buffer = strtok(path, ":");
 	for (i = 0; buffer != NULL; i++)
 	{
-		parr[i] = malloc(sizeof(char) * _strlen(buffer));
+		parr[i] = malloc(sizeof(char) * _strlen(buffer) + 1);
 		parr[i] = _strcpy(parr[i], buffer);
 		buffer = strtok(NULL, ":");
 	}
@@ -104,7 +105,7 @@ char **split_path(char *path)
  * get_cmd - retrieves the execution path if it exists
  * @path_array: array containing PATH elements
  * @cmd: execution command
- * Return: execution path
+ * Return: execution path or NULL if it doesn't exist
  */
 char *get_cmd(char *path_array[], char *cmd)
 {
