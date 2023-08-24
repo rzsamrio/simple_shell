@@ -30,7 +30,7 @@ int fcall(char *line, char *prog)
 			return (2);
 		}
 	}
-	
+
 	pid = fork();
 	if (pid == -1)
 	{
