@@ -1,6 +1,11 @@
 #include "main.h"
 
-
+/**
+ * main - simple shell
+ * @av: cla
+ * @ac: number of cla
+ * Return: 0
+ */
 int main(int ac __attribute__((unused)), char **av)
 {
 	char *cmd, **arg, *buffer = NULL;

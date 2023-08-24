@@ -104,8 +104,14 @@ int p_handl(char **cmd, char **env, char *prog, char **exe, char *buffer)
 
 /**
  * execute - creates a child process that runs the execution
+ * @cmd: address of the cmd to be passed to execve
+ * @env: environment variable
+ * @prog: name of program
+ * @exe: execution line
+ * Return: 0 on completion and 1 on failure
  */
-int execute(char *cmd, char **env, char *prog, char **exe, char *buffer)
+ 
+ int execute(char *cmd, char **env, char *prog, char **exe, char *buffer)
 {
 	int p_stat;
 	pid_t child;
