@@ -57,16 +57,16 @@ char **get_arg(char *src, char **arr)
 	char *buffer;
 
 	for (i = 0, count = 0; src[i] != '\0'; i++)
-		if (src[i] == ' ' || src[i] == '\n')
+		if (src[i] == ' ')
 			count++;
-	arr = malloc(sizeof(char *) * (count + 1));
-	buffer = strtok(src, " \n");
+	arr = malloc(sizeof(char *) * (count + 2));
+	buffer = strtok(src, " ");
 	for (i = 0; buffer != NULL; i++)
 	{
 		arr[i] = buffer;
-		buffer = strtok(NULL, " \n");
+		buffer = strtok(NULL, " ");
 	}
-	arr[count] = NULL;
+	arr[count + 1] = NULL;
 	return (arr);
 }
 
@@ -124,7 +124,7 @@ int execute(char *cmd, char **env, char *prog, char **exe, char *buffer)
 		if (p_stat == 0)
 			free(cmd);
 		free(buffer);
-		exit(98);
+		return (1);
 	}
 	if (child == 0)
 	{

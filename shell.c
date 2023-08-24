@@ -9,8 +9,8 @@
  */
 int main(int ac __attribute__((unused)), char **av)
 {
-	char *cmd, **arg, *buffer;
-	int rc;
+	char *cmd, **arg, *buffer, **exe;
+	int rc, i;
 	const int t_stat = isatty(0);
 
 	while (1)
@@ -21,31 +21,36 @@ int main(int ac __attribute__((unused)), char **av)
 			break;
 		else if (rc == 1)
 			continue;
-		arg = get_arg(buffer, arg);
-		if (specify(arg[0], environ) == 1)
-		{
-			free(buffer);
-			continue;
-		}
 
-		if (ispath(arg[0]) == 0)
+		exe = split_exe(buffer); /* should be freed */
+		for (i = 0; exe[i]; i++)
 		{
-			if (p_handl(&cmd, environ, av[0], arg) == 1)
+			arg = get_arg(exe[i], arg);
+			if (ispath(arg[0]) == 0)
 			{
-				if (t_stat == 0)
-					break;
-				free(buffer);
-				continue;
+				if (p_handl(&cmd, environ, av[0], arg) == 1)
+					continue;
+			}
+			else
+				cmd = arg[0];
+			if (execute(cmd, environ, av[0], arg, buffer) == 1)
+			{
+				free(exe);
+				exit(98);
 			}
 		}
-		else
-			cmd = arg[0];
-
-		execute(cmd, environ, av[0], arg, buffer);
 		if (t_stat == 0)
 			break;
+		free(exe);
 		free(buffer);
 	}
 	free(buffer);
 	return (0);
 }
+
+/*
+ *  when ready add this on line 28
+ *	if (specify(arg[0], environ) == 1)
+ * continue;
+ */
+

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-i=11
+i=0
 
-while [ $i -le 20 ]
+while [ $i -le 6 ]
 do
 	echo $((i + 2)) : 
    	./checker.bash ./a.out $i

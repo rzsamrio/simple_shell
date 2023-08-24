@@ -1,5 +1,14 @@
 #include "main.h"
 
+/**
+ * exe_read - reads from the command line
+ * @prog: program name
+ * @len: length read
+ *
+ * Return: string containing user input
+ * or NULL on new line
+ */
+
 char *exe_read(char *prog, int *len)
 {
 	char *buffer;
@@ -34,6 +43,11 @@ char *exe_read(char *prog, int *len)
 	return (buffer);
 }
 
+/**
+ * split_exe - splits multiple commands into an array
+ * @s: string containing commands
+ * Return: array
+ */
 char **split_exe(char *s)
 {
 	int i, count;
