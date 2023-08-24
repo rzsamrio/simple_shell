@@ -1,41 +1,34 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef __SHELL__H
+#define __SHELL__H
 
-/* Header Files */
-#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-#include <stdio.h>
+#include <unistd.h>
 
-/* Global Variables & Macros */
+#define PT_LEN 4 /* Prompt size */
+
 extern char **environ;
 
-/* Function Declarations */
-
-    /* String --> file: f1.c */
-int _strlen(char *s);
-char *_strcat(char *s1, char *s2);
-char *_strcpy(char *dest, const char *src);
-int _strncmp(const char *s1, const char *s2, int n);
+void prompt(char *p_name);
+int specify(char *cmd, char **env);
+int _strlen(const char *s);
 int _strcmp(char *a, char *b);
-
-	/* Erros --> file: f4.c */
-int _puts(char *s, unsigned int fd);
+int _strncmp(const char *s1, const char *s2, int n);
+char **get_arg(char *src, char **arr);
+char *get_var(char **env, char *var);
+char **split_path(char *path);
+char *_strcat(char *str1, char *str2);
+char *get_cmd(char *path_array[], char *cmd);
 void err_handle(char *prog);
-
-    /* Process Handling      --> file: f2.c */
-int fcall(char *line, char *prog);
-char **tokenize(char *line);
-int runc(char *cmd, char **env);
-
-    /* PATH handling         --> file: f3.c */
+char **clone_arr(char **array);
 int ispath(char *cmd);
-char *fpath(char **env);
-char **spath(char **env);
-char *fetchc(char **path, char *cmd);
-
-#endif /* #ifndef HEADER_H */
+char *_strcpy(char *dest, char *src);
+void free_array(char **arr);
+int _puts(char *s, unsigned int fd);
+char *fpath(char *env[]);
+int p_handl(char **cmd, char **env, char *prog, char **exe, char *buffer);
+int execute(char *cmd, char **env, char *prog, char **exe, char *buffer);
+#endif

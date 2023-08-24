@@ -12,10 +12,6 @@ int _puts(char *s, unsigned int fd)
 {
 	int i = 0;
 
-	if (fd != 1 && fd != 2)
-		fd = 1;
-
-
 	while (s[i])
 		write(fd, &s[i++], 1);
 

@@ -12,17 +12,6 @@ int ispath(char *cmd)
 	return (0);
 }
 
-char *_strcpy(char *dest, char *src)
-{
-	int i;
-
-	if (!dest)
-		return (NULL);
-	for (i = 0; src[i]; i++)
-		dest[i] = src[i];
-	dest[i] = '\0';
-	return (dest);
-}
 
 void free_array(char **arr)
 {
