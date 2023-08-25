@@ -26,12 +26,13 @@ char *fpath(char *env[]);
 char **split_path(char *path);
 char *get_cmd(char *path_array[], char *cmd);
 
-/* string Functions --> string.c */
+/* string Functions --> string.c, more_strings.c */
 int _strlen(const char *s);
 int _strcmp(char *a, char *b);
 int _strncmp(const char *s1, const char *s2, int n);
 char *_strcat(char *str1, char *str2);
 char *_strcpy(char *dest, char *src);
+char *_strtokr(char *s, char *delim, char **sptr);
 
 /* status & display functions --> status.c */
 void err_handle(char *prog);

@@ -64,10 +64,37 @@ char **split_exe(char *s)
 	{
 		arr[i] = tmp;
 		tmp = strtok(NULL, "\n");
-		printf("%s split\n", s);
 	}
 	arr[count] = NULL;
 	return (arr);
 }
 
+char *_strtokr(char *s, char *delim, char **sptr)
+{
+	int i, j;
 
+	if (delim == NULL || *sptr == NULL)
+		return (NULL);
+	
+	if (s == NULL)
+		s = *sptr;
+
+	for (i = 0; delim[i]; i++)
+	{
+		for (j = 0; s[j]; j++)
+		{
+			if (s[j] == delim[i])
+			{
+				if (s[j + 1] != '\0')
+					*sptr = &s[j + 1];
+				else
+					*sptr = NULL;
+				s[j] = '\0';
+				return (s);
+			}
+		}
+	}
+
+	*sptr = NULL;
+	return (s);
+}
