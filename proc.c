@@ -25,12 +25,15 @@ void prompt(char *p_name)
  * specify - runs builtin commands
  * @cmd: command string to check
  * @env: the environmeent array
- * @arg: the argument array to free
  * @x: exit status
+ *
  * @FREE_ARGS: Macro containing parameters to free
+ * @EXEC: Contains the parameters for updating the
+ * execution line
+ *
  * Return: 0 if not builtin, 1 if builtin, exit on exit
  */
-int specify(char *cmd, char **env, FREE_ARGS, int x)
+int specify(char *cmd, char **env, int x, FREE_ARGS, EXEC)
 {
 	int i;
 
@@ -42,6 +45,7 @@ int specify(char *cmd, char **env, FREE_ARGS, int x)
 			_puts("\n", 1);
 		}
 		free(arg);
+		*exe = _strtokr(NULL, "\n", ptr);
 		return (1);
 	}
 	else if (_strcmp(cmd, "exit") == 0)
@@ -84,10 +88,14 @@ char **get_arg(char *src, char **arr)
  * @cmd: address of the cmd to be passed to execve
  * @env: environment variable
  * @prog: name of program
- * @exe: execution line
+ * @arg: execution line
+ *
+ * @EXEC: Contains the parameters for updating the
+ * execution line
+ *
  * Return: 0 on completion and 1 on failure
  */
-int p_handl(char **cmd, char **env, char *prog, char **arg)
+int p_handl(char **cmd, char **env, char *prog, char **arg, EXEC)
 {
 	char *path, **tmp;
 
@@ -104,6 +112,7 @@ int p_handl(char **cmd, char **env, char *prog, char **arg)
 	{
 		err_handle(prog);
 		free(arg);
+		*exe = _strtokr(NULL, "\n", ptr);
 		return (1);
 	}
 	return (0);

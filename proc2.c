@@ -15,14 +15,14 @@ char *exe_read(char *prog, int *len)
 	char *buffer;
 	const char n = '\n';
 
-	buffer = malloc(sizeof(char) * 1024);
+	buffer = malloc(sizeof(char) * ULIMIT);
 	if (buffer == NULL)
 	{
 		err_handle(prog);
 		exit(98);
 	}
 
-	*len = read(0, buffer, 1024);
+	*len = read(0, buffer, ULIMIT);
 	if (*len == -1)
 	{
 		err_handle(prog);
@@ -40,7 +40,10 @@ char *exe_read(char *prog, int *len)
 		*len = 1;
 		return (NULL);
 	}
-	buffer[*len] = '\0';
+	if (*len > ULIMIT - 1)
+		buffer[ULIMIT - 1] = '\0';
+	else
+		buffer[*len] = '\0';
 	return (buffer);
 }
 
@@ -69,32 +72,25 @@ char **split_exe(char *s)
 	return (arr);
 }
 
-char *_strtokr(char *s, char *delim, char **sptr)
+/**
+ * trimexe - Trims and validates execution line
+ * @exe: address of the execution string
+ * @ptr: address of strtok pointer
+ * Return: 0 on valid execution else -1
+ *
+ * Trimexe trims and updates the execution string, and tells
+ * main if to `continue`
+ */
+int trimexe(char **exe, char **ptr)
 {
-	int i, j;
+	int x;
 
-	if (delim == NULL || *sptr == NULL)
-		return (NULL);
-	
-	if (s == NULL)
-		s = *sptr;
-
-	for (i = 0; delim[i]; i++)
+	x = trim(exe);
+	if (x == -1)
 	{
-		for (j = 0; s[j]; j++)
-		{
-			if (s[j] == delim[i])
-			{
-				if (s[j + 1] != '\0')
-					*sptr = &s[j + 1];
-				else
-					*sptr = NULL;
-				s[j] = '\0';
-				return (s);
-			}
-		}
+		*exe = _strtokr(NULL, "\n", ptr);
+		return (x);
 	}
-
-	*sptr = NULL;
-	return (s);
+	return (0);
 }
+
