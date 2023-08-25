@@ -25,12 +25,15 @@ void prompt(char *p_name)
  * specify - runs builtin commands
  * @cmd: command string to check
  * @env: the environmeent array
- * @arg: the argument array to free
  * @x: exit status
+ *
  * @FREE_ARGS: Macro containing parameters to free
+ * @EXEC: Contains the parameters for updating the
+ * execution line
+ *
  * Return: 0 if not builtin, 1 if builtin, exit on exit
  */
-int specify(char *cmd, char **env, char **arg, FREE_ARGS, int x)
+int specify(char *cmd, char **env, int x, FREE_ARGS, EXEC)
 {
 	int i;
 
@@ -42,12 +45,12 @@ int specify(char *cmd, char **env, char **arg, FREE_ARGS, int x)
 			_puts("\n", 1);
 		}
 		free(arg);
+		*exe = _strtokr(NULL, "\n", ptr);
 		return (1);
 	}
 	else if (_strcmp(cmd, "exit") == 0)
 	{
 		free(arg);
-		free(exe);
 		free(buffer);
 		exit(x);
 	}
@@ -85,10 +88,14 @@ char **get_arg(char *src, char **arr)
  * @cmd: address of the cmd to be passed to execve
  * @env: environment variable
  * @prog: name of program
- * @exe: execution line
+ * @arg: execution line
+ *
+ * @EXEC: Contains the parameters for updating the
+ * execution line
+ *
  * Return: 0 on completion and 1 on failure
  */
-int p_handl(char **cmd, char **env, char *prog, char **exe)
+int p_handl(char **cmd, char **env, char *prog, char **arg, EXEC)
 {
 	char *path, **tmp;
 
@@ -96,15 +103,16 @@ int p_handl(char **cmd, char **env, char *prog, char **exe)
 	if (path == NULL)
 	{
 		err_handle(prog);
-		free(exe);
+		free(arg);
 		return (1);
 	}
 	tmp = split_path(path);
-	*cmd = get_cmd(tmp, exe[0]);
+	*cmd = get_cmd(tmp, arg[0]);
 	if (*cmd == NULL)
 	{
 		err_handle(prog);
-		free(exe);
+		free(arg);
+		*exe = _strtokr(NULL, "\n", ptr);
 		return (1);
 	}
 	return (0);
@@ -116,7 +124,8 @@ int p_handl(char **cmd, char **env, char *prog, char **exe)
  * @env: environment variable
  * @prog: name of program
  * @FREE_ARGS: Macro containing parameters to free
- * Return: 0 on completion and 1 if fork fails
+ *
+ * Return: 0 on execution 2 on error and exits if fork fails
  */
 
 int execute(char *cmd, char **env, char *prog, FREE_ARGS)
@@ -124,20 +133,20 @@ int execute(char *cmd, char **env, char *prog, FREE_ARGS)
 	int p_stat, e_stat;
 	pid_t child;
 
-	p_stat = ispath(exe[0]);
+	p_stat = ispath(arg[0]);
 	child = fork();
 	if (child == -1)
 	{
 		err_handle(prog);
-		free(exe);
+		free(arg);
 		if (p_stat == 0)
 			free(cmd);
 		free(buffer);
-		return (1);
+		exit(98);
 	}
 	if (child == 0)
 	{
-		if (execve(cmd, exe, env) == -1)
+		if (execve(cmd, arg, env) == -1)
 		{
 			err_handle(prog);
 			_exit(2);
@@ -146,9 +155,9 @@ int execute(char *cmd, char **env, char *prog, FREE_ARGS)
 	}
 	else
 		waitpid(child, &e_stat, 0);
-	if (ispath(exe[0]) == 0)
+	if (ispath(arg[0]) == 0)
 		free(cmd);
-	free(exe);
+	free(arg);
 	e_stat =  WEXITSTATUS(e_stat);
 	return (e_stat);
 }
