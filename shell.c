@@ -9,24 +9,30 @@
  */
 int main(int ac __attribute__((unused)), char **av)
 {
-	char *cmd, **arg, *buffer, **exe;
-	int rc, i, e_status = 0;
+	char *cmd, **arg, *buffer, *exe, **tmp;
+	int rc, e_status = 0;
 	const int t_stat = isatty(0);
 
 	while (1)
 	{
 		prompt(av[0]);
 		buffer = exe_read(av[0], &rc);
+		printf("%s\n", buffer);
 		if (rc == 0)
 			break;
 		else if (rc == 1)
 			continue;
 
-		exe = split_exe(buffer);
-		for (i = 0; exe[i]; i++)
+		tmp = split_exe(buffer);
+		(void) tmp;
+		return (1);
+		exe = strtok(buffer, "\n"); 
+		printf("%s\n", buffer);
+		while (exe != NULL)
 		{
-			arg = get_arg(exe[i], arg);
-			if (specify(arg[0], environ, arg, exe, buffer, e_status) == 1)
+			printf("%s\n", exe);
+			arg = get_arg(exe, arg);
+			if (specify(arg[0], environ, arg, buffer, e_status) == 1)
 				continue;
 			if (ispath(arg[0]) == 0)
 			{
@@ -36,23 +42,13 @@ int main(int ac __attribute__((unused)), char **av)
 			else
 				cmd = arg[0];
 			e_status = execute(cmd, environ, av[0], arg, buffer);
-			if (e_status == 1)
-			{
-				free(exe);
-				exit(98);
-			}
+			printf("%s\n", exe);
+			exe = strtok(NULL, "\n");
 		}
 		if (t_stat == 0)
 			break;
-		free(exe);
 		free(buffer);
 	}
 	free(buffer);
 	return (e_status);
 }
-
-/*
- *  when ready add this on line 28
- * continue;
- */
-

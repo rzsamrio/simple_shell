@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * exe_read - reads from the command line
@@ -58,10 +59,12 @@ char **split_exe(char *s)
 			count++;
 	arr = malloc(sizeof(char *) * (count + 1));
 	tmp = strtok(s, "\n");
+	printf("%s\n", s);
 	for (i = 0; tmp != NULL; i++)
 	{
 		arr[i] = tmp;
 		tmp = strtok(NULL, "\n");
+		printf("%s split\n", s);
 	}
 	arr[count] = NULL;
 	return (arr);
