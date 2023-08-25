@@ -1,37 +1,47 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef __SHELL__H
+#define __SHELL__H
 
-/* Header Files */
-#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-#include <stdio.h>
+#include <unistd.h>
 
-/* Global Variables & Macros */
+#define PT_LEN 4 /* Prompt size */
+#define FREE_ARGS char **exe, char *buffer /* args passed to be freed */
 extern char **environ;
 
-/* Function Declarations */
+/* process functions --> proc.c proc2.c*/
+void prompt(char *p_name);
+int specify(char *cmd, char **env, char **arg, FREE_ARGS, int x);
+char **get_arg(char *src, char **arr);
+int p_handl(char **cmd, char **env, char *prog, char **exe);
+int execute(char *cmd, char **env, char *prog, FREE_ARGS);
+char *exe_read(char *prog, int *len);
+char **split_exe(char *s);
 
-    /* String/Error Handling           --> file: f1.c */
-int _strlen(char *s);
-char *_strcpy(char *dest, const char *src);
+/* path functions --> path.c */
+char *fpath(char *env[]);
+char **split_path(char *path);
+char *get_cmd(char *path_array[], char *cmd);
+
+/* string Functions --> string.c */
+int _strlen(const char *s);
+int _strcmp(char *a, char *b);
 int _strncmp(const char *s1, const char *s2, int n);
-int _puts(char *s, unsigned int fd);
-void err_handle(char *prog, char **a, char **b, char *c);
+char *_strcat(char *str1, char *str2);
+char *_strcpy(char *dest, char *src);
 
-    /* Process Handling / tokenization --> file: f2.c */
-int fcall(char *line, char *prog);
-char **tokenize(char *line);
-
-    /* PATH handling                   --> file: f3.c */
+/* status & display functions --> status.c */
+void err_handle(char *prog);
 int ispath(char *cmd);
-char *fpath(char **env);
-char **spath(char **env);
-char *fetchc(char **path, char *cmd);
-char *_strcat(char *s1, char *s2);
+void free_array(char **arr);
+int _puts(char *s, unsigned int fd);
 
-#endif /* #ifndef HEADER_H */
+/* obsolete functions */
+char **clone_arr(char **array);
+char *get_var(char **env, char *var);
+
+
+#endif
