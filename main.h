@@ -9,29 +9,35 @@
 #include <unistd.h>
 
 #define PT_LEN 4 /* Prompt size */
-#define FREE_ARGS char **exe, char *buffer /* args passed to be freed */
+#define ULIMIT 1024
+#define FREE_ARGS char **arg, char *buffer /* args passed to be freed */
+#define EXEC char **exe, char **ptr
+
 extern char **environ;
 
 /* process functions --> proc.c proc2.c*/
 void prompt(char *p_name);
-int specify(char *cmd, char **env, char **arg, FREE_ARGS, int x);
+int specify(char *cmd, char **env, int x, FREE_ARGS, EXEC);
 char **get_arg(char *src, char **arr);
-int p_handl(char **cmd, char **env, char *prog, char **exe);
+int p_handl(char **cmd, char **env, char *prog, char **arg, EXEC);
 int execute(char *cmd, char **env, char *prog, FREE_ARGS);
 char *exe_read(char *prog, int *len);
 char **split_exe(char *s);
+int trimexe(char **exe, char **ptr);
 
 /* path functions --> path.c */
 char *fpath(char *env[]);
 char **split_path(char *path);
 char *get_cmd(char *path_array[], char *cmd);
 
-/* string Functions --> string.c */
+/* string Functions --> string.c, more_strings.c */
 int _strlen(const char *s);
 int _strcmp(char *a, char *b);
 int _strncmp(const char *s1, const char *s2, int n);
 char *_strcat(char *str1, char *str2);
 char *_strcpy(char *dest, char *src);
+char *_strtokr(char *s, char *delim, char **sptr);
+int trim(char **s);
 
 /* status & display functions --> status.c */
 void err_handle(char *prog);

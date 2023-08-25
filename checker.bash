@@ -37,7 +37,7 @@ CHMOD=`$WHICH chmod`
 PIDOF=`$WHICH pidof`
 KILLALL=`$WHICH killall`
 KILL=`$WHICH kill`
-VALGRIND=`$WHICH valgrind`
+VALGRIND=`$WHICH valgrind --leak-check=full`
 SED=`$WHICH sed`
 DIFF=`$WHICH diff`
 HEAD=`$WHICH head`
@@ -245,7 +245,7 @@ $ECHO -e -n "\"$shell_input\"" >> $COMMANDFILE
 $ECHO -e -n " | " >> $COMMANDFILE
 if [ $valgrind_error -ne 0 ] || [ $valgrind_leak -ne 0 ]
 then
-	$ECHO -e -n "$VALGRIND --log-file=\"$VALGRIND_OUTPUTFILE\" " >> $COMMANDFILE
+	$ECHO -e -n "$VALGRIND --leak-check=full --log-file=\"$VALGRIND_OUTPUTFILE\" " >> $COMMANDFILE
 fi
 $ECHO -e "\"$HSHELL\" $params > \"$OUTPUTFILE\" 2> \"$ERROR_OUTPUTFILE\"" >> $COMMANDFILE
 $ECHO -e "$ECHO -n \$? > \"$STATUS\"" >> $COMMANDFILE

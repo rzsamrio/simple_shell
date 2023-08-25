@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
  * main - simple shell
@@ -9,9 +8,8 @@
  */
 int main(int ac __attribute__((unused)), char **av)
 {
-	char *cmd, **arg, *buffer, **exe;
-	int rc, i, e_status = 0;
-	const int t_stat = isatty(0);
+	char *cmd, **arg, *buffer, *exe, *ptr;
+	int rc, e_status = 0;
 
 	while (1)
 	{
@@ -22,29 +20,30 @@ int main(int ac __attribute__((unused)), char **av)
 		else if (rc == 1)
 			continue;
 
-		exe = split_exe(buffer);
-		for (i = 0; exe[i]; i++)
+		ptr = buffer; /* dummy init */
+		exe = _strtokr(buffer, "\n", &ptr);
+		while (exe != NULL)
 		{
-			arg = get_arg(exe[i], arg);
-			if (specify(arg[0], environ, arg, exe, buffer, e_status) == 1)
+			if (trimexe(&exe, &ptr) == -1)
 				continue;
+			arg = get_arg(exe, arg);
+
+			if (specify(arg[0], environ, e_status, arg, buffer, &exe, &ptr) == 1)
+				continue;
+
 			if (ispath(arg[0]) == 0)
 			{
-				if (p_handl(&cmd, environ, av[0], arg) == 1)
+				if (p_handl(&cmd, environ, av[0], arg, &exe, &ptr) == 1)
 					continue;
 			}
 			else
 				cmd = arg[0];
 			e_status = execute(cmd, environ, av[0], arg, buffer);
-			if (e_status == 1)
-			{
-				free(exe);
-				exit(98);
-			}
+			exe = _strtokr(NULL, "\n", &ptr);
 		}
-		if (t_stat == 0)
+
+		if (isatty(0) == 0)
 			break;
-		free(exe);
 		free(buffer);
 	}
 	free(buffer);
