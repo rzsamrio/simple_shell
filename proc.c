@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdlib.h>
 
 /**
  * prompt - displays a prompt
@@ -24,9 +25,12 @@ void prompt(char *p_name)
  * specify - runs builtin commands
  * @cmd: command string to check
  * @env: the environmeent array
+ * @arg: the argument array to free
+ * @x: exit status
+ * @FREE_ARGS: Macro containing parameters to free
  * Return: 0 if not builtin, 1 if builtin, exit on exit
  */
-int specify(char *cmd, char **env)
+int specify(char *cmd, char **env, char **arg, FREE_ARGS, int x)
 {
 	int i;
 
@@ -37,10 +41,16 @@ int specify(char *cmd, char **env)
 			write(1, env[i], _strlen(env[i]));
 			_puts("\n", 1);
 		}
+		free(arg);
 		return (1);
 	}
 	else if (_strcmp(cmd, "exit") == 0)
-		exit(0);
+	{
+		free(arg);
+		free(exe);
+		free(buffer);
+		exit(x);
+	}
 
 	return (0);
 }
@@ -105,14 +115,13 @@ int p_handl(char **cmd, char **env, char *prog, char **exe)
  * @cmd: address of the cmd to be passed to execve
  * @env: environment variable
  * @prog: name of program
- * @exe: execution line
- * @buffer: string holding getline content
- * Return: 0 on completion and exits on failure
+ * @FREE_ARGS: Macro containing parameters to free
+ * Return: 0 on completion and 1 if fork fails
  */
 
-int execute(char *cmd, char **env, char *prog, char **exe, char *buffer)
+int execute(char *cmd, char **env, char *prog, FREE_ARGS)
 {
-	int p_stat;
+	int p_stat, e_stat;
 	pid_t child;
 
 	p_stat = ispath(exe[0]);
@@ -131,14 +140,15 @@ int execute(char *cmd, char **env, char *prog, char **exe, char *buffer)
 		if (execve(cmd, exe, env) == -1)
 		{
 			err_handle(prog);
-			_exit(1);
+			_exit(2);
 		}
 		_exit(0);
 	}
 	else
-		waitpid(child, NULL, 0);
+		waitpid(child, &e_stat, 0);
 	if (ispath(exe[0]) == 0)
 		free(cmd);
 	free(exe);
-	return (0);
+	e_stat =  WEXITSTATUS(e_stat);
+	return (e_stat);
 }

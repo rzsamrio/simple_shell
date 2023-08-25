@@ -9,15 +9,15 @@
 #include <unistd.h>
 
 #define PT_LEN 4 /* Prompt size */
-
+#define FREE_ARGS char **exe, char *buffer /* args passed to be freed */
 extern char **environ;
 
 /* process functions --> proc.c proc2.c*/
 void prompt(char *p_name);
-int specify(char *cmd, char **env);
+int specify(char *cmd, char **env, char **arg, FREE_ARGS, int x);
 char **get_arg(char *src, char **arr);
 int p_handl(char **cmd, char **env, char *prog, char **exe);
-int execute(char *cmd, char **env, char *prog, char **exe, char *buffer);
+int execute(char *cmd, char **env, char *prog, FREE_ARGS);
 char *exe_read(char *prog, int *len);
 char **split_exe(char *s);
 

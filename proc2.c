@@ -32,7 +32,7 @@ char *exe_read(char *prog, int *len)
 		write(1, &n, 1);
 		return (buffer);
 	}
-	
+
 	if (buffer[0] == '\n')
 	{
 		free(buffer);
