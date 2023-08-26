@@ -62,3 +62,33 @@ void free_array(char **arr)
 	free(arr);
 }
 
+char *nocmd(char *prog, int line, char *cmd, const char *error)
+{
+	int i, j, tmp, size;
+	char *msg;
+
+	size = _strlen(prog) + _strlen(cmd) + _strlen(error) + 7;
+	msg = malloc(sizeof(char) * (size + 1));
+	for (i = 0, tmp = _strlen(prog); i < tmp; i++)
+		msg[i] = prog[i];
+	msg[i] = ':';
+	i++;
+	msg[i] = ' ';
+	i++;
+	msg[i] = '0' + line;
+	i++;
+	msg[i] = ':';
+	i++;
+	msg[i] = ' ';
+	i++;
+	for (j = 0, tmp = _strlen(cmd); j < tmp; j++, i++)
+		msg[i] = cmd[j];
+	msg[i] = ':';
+	i++;
+	msg[i] = ' ';
+	i++;
+	for (j = 0, tmp = _strlen(error); j < tmp; j++, i++)
+		msg[i] = error[j];
+	msg[size] = '\0';
+	return (msg);
+}

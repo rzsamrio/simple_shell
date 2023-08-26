@@ -41,7 +41,7 @@ int specify(char *cmd, char **env, int x, FREE_ARGS, EXEC)
 	{
 		for (i = 0; env[i]; i++)
 		{
-			write(1, env[i], _strlen(env[i]));
+			write(1, env[i], strlen(env[i]));
 			_puts("\n", 1);
 		}
 		free(arg);
@@ -89,23 +89,38 @@ char **get_arg(char *src, char **arr)
  * @env: environment variable
  * @prog: name of program
  * @arg: execution line
+ * @x: address of exit status
  *
  * @EXEC: Contains the parameters for updating the
  * execution line
  *
  * Return: 0 on completion and 1 on failure
  */
-int p_handl(char **cmd, char **env, char *prog, char **arg, EXEC)
+int p_handl(char **cmd, char **env, char *prog, char **arg, INTS, EXEC)
 {
-	char *path, **tmp;
+	char *path, **tmp, *msg;
 
 	path = fpath(env);
 	if (path == NULL)
 	{
 		err_handle(prog);
 		free(arg);
+		*exe = _strtokr(NULL, "\n", ptr);
 		return (1);
 	}
+
+	if (path[0] == '\0')
+	{
+		free(arg);
+		free(path);
+		*exe = _strtokr(NULL, "\n", ptr);
+		msg = nocmd(prog, line, arg[0], "not found");
+		_puts(msg, 2);
+		free(msg);
+		*x = 127;
+		return (-1);
+	}
+
 	tmp = split_path(path);
 	*cmd = get_cmd(tmp, arg[0]);
 	if (*cmd == NULL)
@@ -155,7 +170,7 @@ int execute(char *cmd, char **env, char *prog, FREE_ARGS)
 	}
 	else
 		waitpid(child, &e_stat, 0);
-	if (ispath(arg[0]) == 0)
+	if (p_stat == 0)
 		free(cmd);
 	free(arg);
 	e_stat =  WEXITSTATUS(e_stat);

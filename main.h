@@ -11,7 +11,8 @@
 #define PT_LEN 4 /* Prompt size */
 #define ULIMIT 1024
 #define FREE_ARGS char **arg, char *buffer /* args passed to be freed */
-#define EXEC char **exe, char **ptr
+#define EXEC char **exe, char **ptr /* Allows for proper execution lines */
+#define INTS int line, int *x /* Line number and exit status */
 
 extern char **environ;
 
@@ -19,7 +20,7 @@ extern char **environ;
 void prompt(char *p_name);
 int specify(char *cmd, char **env, int x, FREE_ARGS, EXEC);
 char **get_arg(char *src, char **arr);
-int p_handl(char **cmd, char **env, char *prog, char **arg, EXEC);
+int p_handl(char **cmd, char **env, char *prog, char **arg, INTS, EXEC);
 int execute(char *cmd, char **env, char *prog, FREE_ARGS);
 char *exe_read(char *prog, int *len);
 char **split_exe(char *s);
@@ -44,6 +45,7 @@ void err_handle(char *prog);
 int ispath(char *cmd);
 void free_array(char **arr);
 int _puts(char *s, unsigned int fd);
+char *nocmd(char *prog, int line, char *cmd, const char *error);
 
 /* obsolete functions */
 char **clone_arr(char **array);

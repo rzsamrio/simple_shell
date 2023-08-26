@@ -62,7 +62,6 @@ char **split_exe(char *s)
 			count++;
 	arr = malloc(sizeof(char *) * (count + 1));
 	tmp = strtok(s, "\n");
-	printf("%s\n", s);
 	for (i = 0; tmp != NULL; i++)
 	{
 		arr[i] = tmp;

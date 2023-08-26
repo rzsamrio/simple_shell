@@ -16,7 +16,7 @@ char **clone_arr(char **array)
 	clone = malloc(sizeof(char *) * (i + 1));
 	for (i = 0; array[i] != NULL; i++)
 	{
-		size = _strlen(array[i]);
+		size = strlen(array[i]);
 		clone[i] = malloc(size + 1);
 		clone[i] = _strcpy(clone[i], array[i]);
 	}
@@ -41,7 +41,7 @@ char *get_var(char **env, char *var)
 		if (_strcmp(buffer, var) == 0)
 		{
 			buffer = strtok(NULL, "=");
-			size = _strlen(buffer);
+			size = strlen(buffer);
 			tmp = malloc(size + 1);
 			tmp = _strcpy(tmp, buffer);
 			free_array(env);
@@ -65,7 +65,7 @@ char *fpath(char *env[])
 	{
 		if (_strncmp(env[i], "PATH=", 5) == 0)
 		{
-			pathv = malloc(sizeof(char) * (_strlen(env[i]) - 4));
+			pathv = malloc(sizeof(char) * (strlen(env[i]) - 4));
 			if (!pathv)
 				return (NULL);
 			_strcpy(pathv, env[i] + 5);
@@ -92,7 +92,7 @@ char **split_path(char *path)
 	buffer = strtok(path, ":");
 	for (i = 0; buffer != NULL; i++)
 	{
-		parr[i] = malloc(sizeof(char) * _strlen(buffer) + 1);
+		parr[i] = malloc(sizeof(char) * strlen(buffer) + 1);
 		parr[i] = _strcpy(parr[i], buffer);
 		buffer = strtok(NULL, ":");
 	}
