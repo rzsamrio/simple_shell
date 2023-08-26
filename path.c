@@ -85,6 +85,9 @@ char **split_path(char *path)
 	int i, num;
 	char *buffer, **parr;
 
+	if (path == NULL)
+		return (NULL);
+
 	for (i = 0, num = 0; path[i]; i++)
 		if (path[i] == ':')
 			num++;
@@ -113,6 +116,9 @@ char *get_cmd(char *path_array[], char *cmd)
 	char *tmp;
 	struct stat file;
 
+	if (path_array == NULL)
+		return (cmd);
+
 	for (i = 0; path_array[i] != NULL; i++)
 	{
 		tmp = _strcat(path_array[i], cmd);
@@ -125,6 +131,6 @@ char *get_cmd(char *path_array[], char *cmd)
 		free(tmp);
 	}
 	free_array(path_array);
-	return (NULL);
+	return (cmd);
 }
 

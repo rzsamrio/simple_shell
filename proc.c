@@ -25,15 +25,16 @@ void prompt(char *p_name)
  * specify - runs builtin commands
  * @cmd: command string to check
  * @env: the environmeent array
- * @x: exit status
  *
  * @FREE_ARGS: Macro containing parameters to free
+ * (arg, buffer)
  * @EXEC: Contains the parameters for updating the
- * execution line
+ * execution line (exe, ptr)
+ * @INTS: Line number and status parameters (x, line)
  *
  * Return: 0 if not builtin, 1 if builtin, exit on exit
  */
-int specify(char *cmd, char **env, int x, FREE_ARGS, EXEC)
+int specify(char *cmd, char **env, INTS, FREE_ARGS, EXEC)
 {
 	int i;
 
@@ -46,13 +47,14 @@ int specify(char *cmd, char **env, int x, FREE_ARGS, EXEC)
 		}
 		free(arg);
 		*exe = _strtokr(NULL, "\n", ptr);
+		(*line)++;
 		return (1);
 	}
 	else if (_strcmp(cmd, "exit") == 0)
 	{
 		free(arg);
 		free(buffer);
-		exit(x);
+		exit(*x);
 	}
 
 	return (0);
@@ -90,30 +92,46 @@ char **get_arg(char *src, char **arr)
  * @prog: name of program
  * @arg: execution line
  *
+ * (arg, buffer)
  * @EXEC: Contains the parameters for updating the
- * execution line
+ * execution line (exe, ptr)
+ * @INTS: Line number and status parameters (x, line)
  *
  * Return: 0 on completion and 1 on failure
  */
-int p_handl(char **cmd, char **env, char *prog, char **arg, EXEC)
+int p_handl(char **cmd, char **env, char *prog, char **arg, INTS, EXEC)
 {
-	char *path, **tmp;
+	char *path, **tmp, *msg;
+	struct stat file;
 
 	path = fpath(env);
 	if (path == NULL)
 	{
 		err_handle(prog);
 		free(arg);
+		*exe = _strtokr(NULL, "\n", ptr);
+		(*line)++;
 		return (1);
 	}
+	if (path[0] == '\0')
+	{
+		free(path);
+		path = NULL;
+		*cmd = arg[0];
+	}
+
 	tmp = split_path(path);
 	*cmd = get_cmd(tmp, arg[0]);
-	if (*cmd == NULL)
+	if (stat(*cmd, &file) != 0)
 	{
-		err_handle(prog);
-		free(arg);
 		*exe = _strtokr(NULL, "\n", ptr);
-		return (1);
+		msg = nocmd(prog, *line, arg[0], "not found\n");
+		_puts(msg, 2);
+		free(arg);
+		free(msg);
+		*x = 127;
+		(*line)++;
+		return (-1);
 	}
 	return (0);
 }
@@ -155,7 +173,7 @@ int execute(char *cmd, char **env, char *prog, FREE_ARGS)
 	}
 	else
 		waitpid(child, &e_stat, 0);
-	if (ispath(arg[0]) == 0)
+	if (p_stat == 0)
 		free(cmd);
 	free(arg);
 	e_stat =  WEXITSTATUS(e_stat);
