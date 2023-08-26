@@ -5,12 +5,13 @@
  * exe_read - reads from the command line
  * @prog: program name
  * @len: length read
+ * @line: address of line number
  *
  * Return: string containing user input
  * or NULL on new line
  */
 
-char *exe_read(char *prog, int *len)
+char *exe_read(char *prog, int *len, int *line)
 {
 	char *buffer;
 	const char n = '\n';
@@ -38,6 +39,7 @@ char *exe_read(char *prog, int *len)
 	{
 		free(buffer);
 		*len = 1;
+		(*line)++;
 		return (NULL);
 	}
 	if (*len > ULIMIT - 1)
@@ -75,12 +77,13 @@ char **split_exe(char *s)
  * trimexe - Trims and validates execution line
  * @exe: address of the execution string
  * @ptr: address of strtok pointer
+ * @line: address of line number
  * Return: 0 on valid execution else -1
  *
  * Trimexe trims and updates the execution string, and tells
  * main if to `continue`
  */
-int trimexe(char **exe, char **ptr)
+int trimexe(char **exe, char **ptr, int *line)
 {
 	int x;
 
@@ -88,7 +91,8 @@ int trimexe(char **exe, char **ptr)
 	if (x == -1)
 	{
 		*exe = _strtokr(NULL, "\n", ptr);
-		return (x);
+		(*line)++;
+		return (-1);
 	}
 	return (0);
 }

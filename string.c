@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * strlen - finds the length of a string
+ * _strlen - finds the length of a string
  * @s: string
  *
  * Return: length
@@ -91,7 +91,7 @@ char *_strcat(char *str1, char *str2)
 	char *merge;
 	int i, j, len;
 
-	len = strlen(str1) + strlen(str2);
+	len = _strlen(str1) + _strlen(str2);
 	merge = malloc(len + 2);
 
 	for (i = 0; str1[i] != '\0'; i++)

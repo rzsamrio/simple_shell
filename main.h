@@ -12,19 +12,19 @@
 #define ULIMIT 1024
 #define FREE_ARGS char **arg, char *buffer /* args passed to be freed */
 #define EXEC char **exe, char **ptr /* Allows for proper execution lines */
-#define INTS int line, int *x /* Line number and exit status */
+#define INTS int *line, int *x /* Line number and exit status */
 
 extern char **environ;
 
 /* process functions --> proc.c proc2.c*/
 void prompt(char *p_name);
-int specify(char *cmd, char **env, int x, FREE_ARGS, EXEC);
+int specify(char *cmd, char **env, INTS, FREE_ARGS, EXEC);
 char **get_arg(char *src, char **arr);
 int p_handl(char **cmd, char **env, char *prog, char **arg, INTS, EXEC);
 int execute(char *cmd, char **env, char *prog, FREE_ARGS);
-char *exe_read(char *prog, int *len);
+char *exe_read(char *prog, int *len, int *line);
 char **split_exe(char *s);
-int trimexe(char **exe, char **ptr);
+int trimexe(char **exe, char **ptr, int *line);
 
 /* path functions --> path.c */
 char *fpath(char *env[]);

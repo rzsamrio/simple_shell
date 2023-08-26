@@ -62,6 +62,15 @@ void free_array(char **arr)
 	free(arr);
 }
 
+/**
+ * nocmd - sets the error string to be printed
+ * @prog: program name
+ * @line: line number
+ * @cmd: execution command
+ * @error: error message
+ *
+ * Return: buffer string to print
+ */
 char *nocmd(char *prog, int line, char *cmd, const char *error)
 {
 	int i, j, tmp, size;
