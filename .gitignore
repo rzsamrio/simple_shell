@@ -1,2 +1,5 @@
 # Executables
 *.out
+# Temporary files
+*.swp
+*~
